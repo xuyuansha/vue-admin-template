@@ -8,10 +8,10 @@ export function login(data) {
   })
 }
 
-export function getInfo() {
+export function getMenus() {
   return request({
-    url: '/api/user/info',
-    method: 'get',
+    url: '/api/user/menus',
+    method: 'get'
   })
 }
 
