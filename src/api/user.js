@@ -11,7 +11,14 @@ export function login(data) {
 export function getInfo() {
   return request({
     url: '/api/user/info',
-    method: 'get',
+    method: 'get'
+  })
+}
+
+export function getMenu() {
+  return request({
+    url: '/api/user/menus',
+    method: 'get'
   })
 }
 
