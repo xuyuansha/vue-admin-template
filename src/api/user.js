@@ -8,7 +8,14 @@ export function login(data) {
   })
 }
 
-export function getMenus() {
+export function getInfo() {
+  return request({
+    url: '/api/user/info',
+    method: 'get'
+  })
+}
+
+export function getMenu() {
   return request({
     url: '/api/user/menus',
     method: 'get'
