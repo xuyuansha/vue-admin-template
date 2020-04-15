@@ -1,4 +1,6 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import store from '@/store'
+import Layout from '@/layout/index'
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -47,18 +49,66 @@ const mutations = {
 }
 
 const actions = {
-  generateRoutes({ commit }, roles) {
+  generateRoutes({ commit }) {
     return new Promise(resolve => {
-      let accessedRoutes
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      }
+      // const accessedRoutes = asyncRoutes
+      const accessedRoutes = formatRoutes(store.getters.menus)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })
   }
+}
+// {
+//   path: '/example',
+//     component: Layout,
+//   redirect: '/example/table',
+//   name: 'Example',
+//   meta: { title: 'Example', icon: 'example' },
+//   children: [
+//     {
+//       path: 'table',
+//       name: 'Table',
+//       component: () => import('@/views/table/index'),
+//       meta: { title: 'Table', icon: 'table' }
+//     },
+//     {
+//       path: 'tree',
+//       name: 'Tree',
+//       component: () => import('@/views/tree/index'),
+//       meta: { title: 'Tree', icon: 'tree' }
+//     }
+//   ]
+// },
+export const formatRoutes = (routes) => {
+  const fmRoutes = []
+  routes.forEach(router => {
+    console.log(router)
+    const fmRouter = {
+    }
+    fmRouter.path = router.path
+    fmRouter.component = Layout
+    fmRouter.name = router.menuName
+    fmRouter.redirect = '/example/table'
+    fmRouter.meta = { title: router.menuName, icon: router.menuIcon }
+    const children = router.subMenu
+    const childrenRoutes = []
+    if (children) {
+      children.forEach(child => {
+        const childRoute = {
+        }
+        // childRoute.path = child.path
+        childRoute.component = () => import('@/views/nested/menu1/index')
+        childRoute.path = 'tree'
+        childRoute.name = child.menuName
+        childRoute.meta = { title: child.menuName, icon: child.menuIcon }
+        childrenRoutes.push(childRoute)
+      })
+      fmRouter.children = childrenRoutes
+    }
+    fmRoutes.push(fmRouter)
+  })
+  console.log(fmRoutes)
+  return fmRoutes
 }
 
 export default {

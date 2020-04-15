@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ userInfo.nickName }}</div>
+    <div class="dashboard-text">name: {{ user.nickName }}</div>
     <div class="dashboard-text">menus: <span v-for="menu in menus" :key="menu.id">{{ menu.menuName }}</span></div>
   </div>
 </template>
@@ -12,7 +12,7 @@ export default {
   name: 'Dashboard',
   computed: {
     ...mapGetters([
-      'userInfo',
+      'user',
       'menus'
     ])
   }

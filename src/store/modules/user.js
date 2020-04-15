@@ -1,4 +1,4 @@
-import { login, logout, getInfo, getMenu } from '@/api/user'
+import { login, logout, getMenu } from '@/api/user'
 import { getToken, setToken, removeToken, getUser, setUser, removeUser } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -6,9 +6,6 @@ const getDefaultState = () => {
   return {
     user: getUser(),
     token: getToken(),
-    name: '',
-    avatar: '',
-    roles: [],
     menus: []
   }
 }
@@ -27,15 +24,6 @@ const mutations = {
   },
   SET_TOKEN: (state, token) => {
     state.token = token
-  },
-  SET_NAME: (state, name) => {
-    state.name = name
-  },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
-  },
-  SET_ROLES: (state, roles) => {
-    state.roles = roles
   }
 }
 
@@ -70,13 +58,13 @@ const actions = {
         console.log(data)
         const menus = data
 
+        console.log(menus)
         // roles must be a non-empty array
         if (!menus || menus.length <= 0) {
           reject('getInfo: menus must be a non-null array!')
         }
 
         commit('SET_MENUS', menus)
-        // commit('SET_NAME', nickName)
         // commit('SET_AVATAR', userPhoto)
         resolve(menus)
       }).catch(error => {
@@ -84,34 +72,6 @@ const actions = {
       })
     })
   },
-
-  // get user info
-  getInfo({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      getInfo().then(response => {
-        const { data } = response
-
-        if (!data) {
-          reject('Verification failed, please Login again.')
-        }
-
-        const { roles, nickName, userPhoto } = data
-
-        // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
-        }
-
-        commit('SET_ROLES', roles)
-        commit('SET_NAME', nickName)
-        commit('SET_AVATAR', userPhoto)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
