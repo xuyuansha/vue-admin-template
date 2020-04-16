@@ -1,6 +1,7 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import { constantRoutes } from '@/router'
 import store from '@/store'
 import Layout from '@/layout/index'
+import el from 'element-ui/src/locale/lang/el'
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -58,27 +59,7 @@ const actions = {
     })
   }
 }
-// {
-//   path: '/example',
-//     component: Layout,
-//   redirect: '/example/table',
-//   name: 'Example',
-//   meta: { title: 'Example', icon: 'example' },
-//   children: [
-//     {
-//       path: 'table',
-//       name: 'Table',
-//       component: () => import('@/views/table/index'),
-//       meta: { title: 'Table', icon: 'table' }
-//     },
-//     {
-//       path: 'tree',
-//       name: 'Tree',
-//       component: () => import('@/views/tree/index'),
-//       meta: { title: 'Tree', icon: 'tree' }
-//     }
-//   ]
-// },
+
 export const formatRoutes = (routes) => {
   const fmRoutes = []
   routes.forEach(router => {
@@ -86,24 +67,16 @@ export const formatRoutes = (routes) => {
     const fmRouter = {
     }
     fmRouter.path = router.path
-    fmRouter.component = Layout
-    fmRouter.name = router.menuName
-    fmRouter.redirect = '/example/table'
+    if (router.component === 'Layout'){
+      fmRouter.component = Layout
+    }else{
+      fmRouter.component = () => import(`../../views/${router.path}/index`)
+    }
+    fmRouter.name = router.component
     fmRouter.meta = { title: router.menuName, icon: router.menuIcon }
-    const children = router.subMenu
-    const childrenRoutes = []
-    if (children) {
-      children.forEach(child => {
-        const childRoute = {
-        }
-        // childRoute.path = child.path
-        childRoute.component = () => import('@/views/nested/menu1/index')
-        childRoute.path = 'tree'
-        childRoute.name = child.menuName
-        childRoute.meta = { title: child.menuName, icon: child.menuIcon }
-        childrenRoutes.push(childRoute)
-      })
-      fmRouter.children = childrenRoutes
+
+    if (router.subMenu && router.subMenu.length) {
+      fmRouter.children = formatRoutes(router.subMenu)
     }
     fmRoutes.push(fmRouter)
   })

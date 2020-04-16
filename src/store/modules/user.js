@@ -4,7 +4,7 @@ import { resetRouter } from '@/router'
 
 const getDefaultState = () => {
   return {
-    user: getUser(),
+    user: getUser() ? JSON.parse(getUser()) : null,
     token: getToken(),
     menus: []
   }
