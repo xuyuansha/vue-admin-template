@@ -15,5 +15,5 @@ export function isExternal(path) {
  * @returns {Boolean}
  */
 export function validUsername(str) {
-  return true
+  return /^[A-Za-z_@.]\w{3,20}$/.test(str)
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules"  size="small"  class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
         <h3 class="title">Login Form</h3>
@@ -42,11 +42,6 @@
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
-
-      <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
-      </div>
 
     </el-form>
   </div>
@@ -139,11 +134,14 @@ $cursor: #fff;
   }
 }
 
+.login-form{
+  background-color: rgba(255, 255, 255, 0.3);
+}
 /* reset element-ui css */
 .login-container {
   .el-input {
     display: inline-block;
-    height: 47px;
+    height: 40px;
     width: 85%;
 
     input {
@@ -153,7 +151,7 @@ $cursor: #fff;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
       color: $light_gray;
-      height: 47px;
+      height: 40px;
       caret-color: $cursor;
 
       &:-webkit-autofill {
@@ -185,11 +183,13 @@ $light_gray:#eee;
 
   .login-form {
     position: relative;
-    width: 520px;
+    width: 420px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 25px 35px;
     margin: 0 auto;
+    margin-top: 200px;
     overflow: hidden;
+    border-radius: 5px;
   }
 
   .tips {
@@ -216,9 +216,9 @@ $light_gray:#eee;
     position: relative;
 
     .title {
-      font-size: 26px;
+      font-size: 25px;
       color: $light_gray;
-      margin: 0px auto 40px auto;
+      margin: 0px auto 30px auto;
       text-align: center;
       font-weight: bold;
     }
