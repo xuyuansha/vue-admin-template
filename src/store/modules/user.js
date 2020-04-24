@@ -52,7 +52,8 @@ const actions = {
         const { data } = response
 
         if (!data) {
-          reject('Verification failed, please Login again.')
+          reject('你还没有操作权限，请联系管理员！')
+          return
         }
 
         console.log(data)
@@ -61,7 +62,8 @@ const actions = {
         console.log(menus)
         // roles must be a non-empty array
         if (!menus || menus.length <= 0) {
-          reject('getInfo: menus must be a non-null array!')
+          reject('你还没有操作权限，请联系管理员！')
+          return
         }
 
         commit('SET_MENUS', menus)

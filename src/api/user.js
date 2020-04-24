@@ -28,3 +28,11 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function getUsers(data) {
+  return request({
+    url: '/api/system/user',
+    method: 'get',
+    params: { data }
+  })
+}

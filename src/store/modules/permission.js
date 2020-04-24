@@ -69,7 +69,7 @@ export const formatRoutes = (routes) => {
     fmRouter.path = router.path
     if (router.component === 'Layout'){
       fmRouter.component = Layout
-    }else{
+    } else {
       fmRouter.component = () => import(`../../views/${router.path}/index`)
     }
     fmRouter.name = router.component
