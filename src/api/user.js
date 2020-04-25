@@ -31,8 +31,16 @@ export function logout() {
 
 export function getUsers(data) {
   return request({
-    url: '/api/system/user',
+    url: '/api/system/user/v1',
     method: 'get',
-    params: { data }
+    params: data
+  })
+}
+
+export function addUser(data) {
+  return request({
+    url: '/api/system/user/v1',
+    method: 'post',
+    data
   })
 }
