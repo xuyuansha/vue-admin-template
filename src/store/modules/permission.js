@@ -67,7 +67,7 @@ export const formatRoutes = (routes) => {
     const fmRouter = {
     }
     fmRouter.path = router.path
-    if (router.component === 'Layout'){
+    if (router.component === 'Layout') {
       fmRouter.component = Layout
     } else {
       fmRouter.component = () => import(`../../views/${router.path}/index`)

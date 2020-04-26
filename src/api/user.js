@@ -44,3 +44,10 @@ export function addUser(data) {
     data
   })
 }
+
+export function delUser(data) {
+  return request({
+    url: '/api/system/user/v1',
+    method: 'delete'
+  })
+}
