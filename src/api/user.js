@@ -46,8 +46,9 @@ export function addUser(data) {
 }
 
 export function delUser(data) {
+  const ids = data.map(item => item).join()
   return request({
-    url: '/api/system/user/v1',
+    url: '/api/system/user/v1/' + ids,
     method: 'delete'
   })
 }
