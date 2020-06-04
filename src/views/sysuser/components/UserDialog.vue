@@ -51,6 +51,17 @@
 <script>
 export default {
   name: 'UserDialog',
+  props: {
+
+  },
+  methods: {
+    show() {
+      this.visible = true
+    },
+    hide() {
+      this.visible = false
+    }
+  },
   data() {
     return {
       visible: false,

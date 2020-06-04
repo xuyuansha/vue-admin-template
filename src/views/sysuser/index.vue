@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
     <delete-dialog :show.sync="dialogDeleteVisible" :title="deleteTitle" :content="deleteContent" @on-result-change="changeIsShowDialog" @child-operation="operation"></delete-dialog>
-    <user-dialog :visible.sync="dialogFormVisible"></user-dialog>
+    <user-dialog ref="addDialog"></user-dialog>
     <div class="search-div">
       <el-input placeholder="请输入用户名或昵称搜索" max-length="20" size="small" v-model="listQuery.keyword">
         <el-button slot="append" icon="el-icon-search" @click="getUserList" />
       </el-input>
-      <el-button type="primary" icon="el-icon-plus" size="small" v-if="showOperator" @click="dialogFormVisible = true, form={}">添加用户</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="small" v-if="showOperator" @click="handleAddUser">添加用户</el-button>
     </div>
     <el-table :data="list" v-if="list" @selection-change="handleSelect">
       <el-table-column type="selection" width="55" align="center" :selectable="selectable"/>
@@ -187,6 +187,9 @@ export default {
     },
     changeIsShowDialog(val) {
       this.dialogDeleteVisible = val
+    },
+    handleAddUser() {
+      this.$refs.addDialog.show()
     },
     handleChangStatus(row) {
       const content = '确定要' + (row.enabled ? '启用' : '禁用') + row.username + '吗？'
