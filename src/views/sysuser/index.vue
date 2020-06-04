@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <delete-dialog :show.sync="dialogDeleteVisible" :title="deleteTitle" :content="deleteContent" @on-result-change="changeIsShowDialog" @child-operation="operation"></delete-dialog>
-    <user-dialog ref="addDialog"></user-dialog>
+    <user-dialog ref="addDialog" :userInfo="userInfo"></user-dialog>
     <div class="search-div">
       <el-input placeholder="请输入用户名或昵称搜索" max-length="20" size="small" v-model="listQuery.keyword">
         <el-button slot="append" icon="el-icon-search" @click="getUserList" />
@@ -93,6 +93,7 @@ export default {
       dialogFormVisible: false,
       dialogDeleteVisible: false,
       total: 1,
+      userInfo: null,
       listLoading: true,
       listQuery: {
         pageNo: 1,
@@ -138,8 +139,8 @@ export default {
       return row.enabled ? '可用' : '禁用'
     },
     handleEdit(row) {
-      this.dialogFormVisible = true
-      this.form = row
+      this.userInfo = row
+      this.$refs.addDialog.show()
     },
     handleDelete(row) {
       console.log(row)
@@ -189,6 +190,7 @@ export default {
       this.dialogDeleteVisible = val
     },
     handleAddUser() {
+      this.userInfo = null
       this.$refs.addDialog.show()
     },
     handleChangStatus(row) {
