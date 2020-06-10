@@ -1,7 +1,7 @@
 <template>
   <div v-if="visible">
     <el-dialog title="用户信息" :visible.sync="visible" width="650px" :close-on-click-modal="false">
-      <el-form :model="form" status-icon :rules="rules" label-width="80px" label-position="right">
+      <el-form :model="form" status-icon :rules="rules" label-width="80px" label-position="right" ref="form">
         <el-container>
           <el-aside width="60%">
             <el-form-item label="用户名:" prop="username">
@@ -32,7 +32,6 @@
               class="avatar-uploader"
               action="https://jsonplaceholder.typicode.com/posts/"
               :show-file-list="false"
-              :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload">
               <img v-if="form.userPhoto" :src="form.userPhoto" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -43,13 +42,15 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="visible = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="visible = false" size="small">确 定</el-button>
+        <el-button type="primary" @click="handleSubmit" size="small">确 定</el-button>
       </div>
   </el-dialog>
   </div>
 </template>
 
 <script>
+import { updateUser } from '../../../api/user'
+
 export default {
   name: 'UserDialog',
   props: {
@@ -78,6 +79,17 @@ export default {
     },
     hide() {
       this.visible = false
+    },
+    beforeAvatarUpload(file) {
+      console.log(file.type)
+    },
+    handleSubmit() {
+      this.$refs.form.validate(bool => {
+        if (bool) {
+          console.log(this.form)
+          updateUser(this.form)
+        }
+      })
     }
   },
   data() {
@@ -103,7 +115,10 @@ export default {
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+        ],
+        roles: [
+          { required: true, message: '请选择角色', trigger: 'blur' }
         ]
       }
     }

@@ -37,7 +37,7 @@ export function getUsers(data) {
   })
 }
 
-export function addUser(data) {
+export function updateUser(data) {
   return request({
     url: '/api/system/user/v1',
     method: 'post',
