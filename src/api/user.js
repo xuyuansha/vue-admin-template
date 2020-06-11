@@ -52,3 +52,10 @@ export function delUser(data) {
     method: 'delete'
   })
 }
+
+export function getAllRoles() {
+  return request({
+    url: '/api/roles/all',
+    method: 'get'
+  })
+}

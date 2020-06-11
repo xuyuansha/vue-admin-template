@@ -17,3 +17,8 @@ export function isExternal(path) {
 export function validUsername(str) {
   return /^[A-Za-z_@.]\w{3,20}$/.test(str)
 }
+
+export function isvalidPass(str) {
+  const reg = /^\w{6,18}$/
+  return reg.test(str)
+}

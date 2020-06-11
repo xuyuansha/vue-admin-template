@@ -36,7 +36,7 @@
         label="角色"
       >
         <template slot-scope="{row}">
-          <span v-for="(role, index) in row.roles" :key="index"> {{ role.roleName }} </span>
+          <span v-for="(role, index) in row.roles" :key="index"> {{ role.roleLabel }} </span>
         </template>
       </el-table-column>
       <el-table-column
