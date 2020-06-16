@@ -22,6 +22,14 @@ export function getMenu() {
   })
 }
 
+export function updateStatus(id, status) {
+  return request({
+    url: '/api/system/user/updateStatus/v1/' + id,
+    method: 'put',
+    params: { status }
+  })
+}
+
 export function logout() {
   return request({
     url: '/api/user/logout',

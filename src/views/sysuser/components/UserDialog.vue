@@ -40,7 +40,7 @@
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
             <p>上传头像</p>
-            <div>(3M以内，支持jpg,png,gif格式)</div>
+            <div>(300K以内，支持jpg,png,gif格式)</div>
           </el-main>
         </el-container>
       </el-form>
@@ -95,8 +95,8 @@ export default {
     },
     getFile(file, fileList) {
       // console.log(file.raw.size, file.raw.type)
-      if (file.raw.size / 1024 / 1024 > 3) {
-        this.$message.error('不能超过3M')
+      if (file.raw.size / 1024 > 300) {
+        this.$message.error('不能超过300K')
         return
       }
       // image/jpeg,image/gif,image/png,image/jpg
@@ -188,10 +188,10 @@ export default {
           { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
         ],
         password: [
-          { required: true, validator: validatePwd, trigger: 'blur' }
+          { required: !(this.userInfo && this.userInfo.userId), validator: validatePwd, trigger: 'blur' }
         ],
         checkPass: [
-          { required: true, validator: validatePwd2, trigger: 'blur' }
+          { required: !(this.userInfo && this.userInfo.userId), validator: validatePwd2, trigger: 'blur' }
         ]
       }
     }

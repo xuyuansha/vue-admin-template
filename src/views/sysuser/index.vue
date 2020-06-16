@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { delUser, getUsers } from '../../api/user'
+import { delUser, getUsers, updateStatus } from '../../api/user'
 import Pagination from '../../components/Pagination'
 import DeleteDialog from '../../components/DeleteDialog/index'
 import UserDialog from './components/UserDialog'
@@ -201,6 +201,7 @@ export default {
         type: 'warning'
       }).then(() => {
         // Todo: 发出请求修改用户信息请求
+        updateStatus(row.userId, row.enabled)
         this.$message({
           type: 'success',
           message: (row.enabled ? '启用成功！' : '禁用成功！')
