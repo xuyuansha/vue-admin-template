@@ -26,6 +26,15 @@
                 </el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="状态:" prop="enabled">
+              <el-switch
+                v-model="form.enabled"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-text="可用"
+                inactive-text="禁用">
+              </el-switch>
+            </el-form-item>
           </el-aside>
           <el-main style="text-align: center">
             <el-upload
@@ -55,6 +64,7 @@
 <script>
 import { updateUser, getAllRoles } from '../../../api/user'
 import { isvalidPass } from '../../../utils/validate'
+import { validUsername } from '@/utils/validate'
 
 export default {
   name: 'UserDialog',
@@ -73,6 +83,7 @@ export default {
             password: '',
             checkPass: '',
             userPhoto: '',
+            enabled: true,
             roles: []
           }
         }
@@ -136,6 +147,13 @@ export default {
     }
   },
   data() {
+    const validateUsername = (rule, value, callback) => {
+      if (!validUsername(value)) {
+        callback(new Error('3-20个字符，字母开头，只能包含字母数字下划线'))
+      } else {
+        callback()
+      }
+    }
     const validatePwd = (rule, value, callback) => {
       if (!this.userInfo && value === '') {
         callback(new Error('请输入密码'))
@@ -177,8 +195,7 @@ export default {
       ],
       rules: {
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+          { required: true, trigger: 'blur', validator: validateUsername }
         ],
         roles: [
           { required: true, message: '请选择角色', trigger: 'change' }
