@@ -48,7 +48,9 @@
 </template>
 
 <script>
+import md5 from "js-md5"
 import { validUsername } from '@/utils/validate'
+import { deepClone } from '../../utils'
 
 export default {
   name: 'Login',
@@ -104,7 +106,9 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
+          const option = deepClone(this.loginForm)
+          option.password = md5(option.password)
+          this.$store.dispatch('user/login', option).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {

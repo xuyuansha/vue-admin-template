@@ -63,8 +63,10 @@
 
 <script>
 import { updateUser, getAllRoles } from '../../../api/user'
+import md5 from 'js-md5'
 import { isvalidPass } from '../../../utils/validate'
 import { validUsername } from '@/utils/validate'
+import { deepClone } from '../../../utils'
 
 export default {
   name: 'UserDialog',
@@ -76,6 +78,9 @@ export default {
       if (val) {
         if (this.userInfo) {
           this.form = JSON.parse(JSON.stringify(this.userInfo))
+          this.form.password = ''
+          this.form.checkPass = ''
+          this.form.roles = this.userInfo.roles.map(x => { return x.roleId } )
         } else {
           this.form = {
             username: '',
@@ -141,14 +146,21 @@ export default {
       this.$refs.form.validate(bool => {
         if (bool) {
           console.log(this.form)
-          updateUser(this.form)
+          const option = deepClone(this.form)
+          option.password = md5(option.password)
+          updateUser(option).then(ret => {
+            if (ret.code === 0) {
+              this.hide()
+              this.$parent.getUserList()
+            }
+          })
         }
       })
     }
   },
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
+      if ( !validUsername(value)) {
         callback(new Error('3-20个字符，字母开头，只能包含字母数字下划线'))
       } else {
         callback()
@@ -157,7 +169,7 @@ export default {
     const validatePwd = (rule, value, callback) => {
       if (!this.userInfo && value === '') {
         callback(new Error('请输入密码'))
-      } else if (!isvalidPass(value)) {
+      } else if (!this.userInfo && !isvalidPass(value)) {
         callback(
           new Error('长度6-18位 只能包含字母、数字和下划线')
         )
@@ -205,10 +217,10 @@ export default {
           { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
         ],
         password: [
-          { required: !(this.userInfo && this.userInfo.userId), validator: validatePwd, trigger: 'blur' }
+          { validator: validatePwd, trigger: 'blur' }
         ],
         checkPass: [
-          { required: !(this.userInfo && this.userInfo.userId), validator: validatePwd2, trigger: 'blur' }
+          { validator: validatePwd2, trigger: 'blur' }
         ]
       }
     }
