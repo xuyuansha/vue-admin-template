@@ -24,9 +24,9 @@ export function getMenu() {
 
 export function updateStatus(id, status) {
   return request({
-    url: '/api/system/user/updateStatus/v1/' + id,
+    url: '/api/system/user/updateStatus/v1/',
     method: 'put',
-    params: { status }
+    params: { id, status }
   })
 }
 
