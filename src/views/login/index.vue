@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import md5 from "js-md5"
+import md5 from 'js-md5'
 import { validUsername } from '@/utils/validate'
 import { deepClone } from '../../utils'
 

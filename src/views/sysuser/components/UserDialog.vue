@@ -76,21 +76,22 @@ export default {
   watch: {
     visible(val) {
       if (val) {
+        this.form = {
+          username: '',
+          nickName: '',
+          password: '',
+          checkPass: '',
+          userPhoto: '',
+          enabled: true,
+          roles: []
+        }
         if (this.userInfo) {
-          this.form = JSON.parse(JSON.stringify(this.userInfo))
-          this.form.password = ''
-          this.form.checkPass = ''
-          this.form.roles = this.userInfo.roles.map(x => { return x.roleId } )
-        } else {
-          this.form = {
-            username: '',
-            nickName: '',
-            password: '',
-            checkPass: '',
-            userPhoto: '',
-            enabled: true,
-            roles: []
-          }
+          this.form.userId = this.userInfo.userId
+          this.form.username = this.userInfo.username
+          this.form.nickName = this.userInfo.nickName
+          this.form.userPhoto = this.userInfo.userPhoto
+          this.form.enabled = this.userInfo.enabled
+          this.form.roles = this.userInfo.roles.map(x => { return x.roleId })
         }
       }
     }
@@ -169,22 +170,26 @@ export default {
     const validatePwd = (rule, value, callback) => {
       if (!this.userInfo && value === '') {
         callback(new Error('请输入密码'))
-      } else if (!this.userInfo && !isvalidPass(value)) {
+        return
+      }
+      if (!this.userInfo && !isvalidPass(value)) {
         callback(
           new Error('长度6-18位 只能包含字母、数字和下划线')
         )
-      } else {
-        callback()
+        return
       }
+      callback()
     }
     const validatePwd2 = (rule, value, callback) => {
       if (!this.userInfo && value === '') {
         callback(new Error('请再次输入密码'))
-      } else if (value !== this.form.password) {
-        callback(new Error('两次输入密码不一致！'))
-      } else {
-        callback()
+        return
       }
+      if (value !== this.form.password) {
+        callback(new Error('两次输入密码不一致！'))
+        return
+      }
+      callback()
     }
     return {
       visible: false,
