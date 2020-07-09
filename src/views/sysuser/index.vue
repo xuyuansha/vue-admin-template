@@ -51,6 +51,7 @@
             active-color="#13ce66"
             inactive-color="#ff4949"
             @change="handleChangStatus(row)"
+            :disabled="row.username === 'admin'"
             active-text="可用"
             inactive-text="禁用">
           </el-switch>

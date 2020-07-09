@@ -67,3 +67,11 @@ export function getAllRoles() {
     method: 'get'
   })
 }
+
+export function getRoles(data) {
+  return request({
+    url: '/api/system/role/v1',
+    method: 'get',
+    params: data
+  })
+}
