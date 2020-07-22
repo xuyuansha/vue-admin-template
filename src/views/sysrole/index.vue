@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-
+    <delete-dialog :show.sync="dialogDeleteVisible" :title="deleteTitle" :content="deleteContent" @on-result-change="changeIsShowDialog" @child-operation="operation"></delete-dialog>
     <div class="search-div">
       <el-input placeholder="请输入角色名搜索" max-length="20" size="small" v-model="listQuery.keyword">
         <el-button slot="append" icon="el-icon-search" @click="getRoleList" />
@@ -21,17 +21,24 @@
         prop="roleName"
         width="180">
       </el-table-column>
+
       <el-table-column
-        label="角色级别"
-        prop="roleLevel"
-      />
-      <el-table-column
-        label="角色别名"
+        label="别名"
         prop="roleLabel"
+        width="180"
       />
       <el-table-column
-        label="角色描述"
+        label="权限"
+        max-width="200"
+      >
+        <template slot-scope="{row}">
+          <span v-for="menu in row.menus" :key="menu.menuId"> {{ menu.menuName }} </span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="描述"
         prop="roleDesc"
+        max-width="200"
       >
       </el-table-column>
       <el-table-column
@@ -45,7 +52,7 @@
         label="操作"
         align="center"
         width="180">
-        <template slot-scope="{row}">
+        <template slot-scope="{row}" v-if="row.roleName != 'ADMIN'">
           <el-button size="mini" type="success" icon="el-icon-edit" @click="handleEdit(row)"/>
           <el-button size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(row)"/>
         </template>
@@ -58,10 +65,11 @@
 </template>
 
 <script>
-import { getRoles } from '../../api/user'
+import { getRoles, delRole } from '../../api/user'
+import DeleteDialog from '../../components/DeleteDialog/index'
 import Pagination from '../../components/Pagination'
 export default {
-  components: { Pagination },
+  components: { Pagination, DeleteDialog },
   data() {
     return {
       list: null,
@@ -71,8 +79,12 @@ export default {
         keyword: ''
       },
       total: 1,
+      dialogDeleteVisible: false,
+      deleteTitle: '',
+      deleteContent: '',
       batDelDisable: true,
       user: this.$store.getters.user,
+      deleteIds: []
     }
   },
   watch: {
@@ -90,6 +102,9 @@ export default {
     }
   },
   methods: {
+    changeIsShowDialog(val) {
+      this.dialogDeleteVisible = val
+    },
     getRoleList() {
       getRoles(this.listQuery).then((res) => {
         this.list = Array.from(res.data.list)
@@ -98,13 +113,61 @@ export default {
     },
     handleAddRole() {
     },
-    handleSelect() {
+    handleSelect(selections) {
+      console.log(selections)
+      this.deleteIds = []
+      selections.forEach((item, selections) => {
+        this.deleteIds.push(item.userId)
+      })
+      if (selections && selections.length > 0) {
+        this.batDelDisable = false
+      } else {
+        this.batDelDisable = true
+      }
     },
-    selectable() {
+    selectable(row, index) {
+      return row.roleName !== 'ADMIN'
+    },
+    handleDelete(row) {
+      console.log(row)
+      this.deleteIds = []
+      this.deleteIds.push(row.roleId)
+      this.deleteTitle = '删除角色'
+      this.deleteContent = '确定要删除角色 ' + row.roleName + ' 吗？'
+      this.dialogDeleteVisible = true
     },
     handleBatDelete() {
-    }
+      this.deleteTitle = '删除角色'
+      this.deleteContent = '确定要删除选中的所有角色吗？'
+      this.dialogDeleteVisible = true
+    },
+    operation(type) {
+      if (type === 'confirm') {
+        this.dialogDeleteVisible = false
+        delRole(this.deleteIds).then(res => {
+          console.log(res)
+          this.$message({
+            showClose: true,
+            message: '删除成功！',
+            type: 'success'
+          })
+          this.getUserList()
+        })
+      } else if (type === 'cancel') {
+        this.dialogDeleteVisible = false
+      }
+    },
   }
 }
 </script>
+
+<style>
+  .search-div{
+    text-align: right;
+    margin: 10px;
+  }
+  .search-div .el-input {
+    width: 280px;
+  }
+</style>
 

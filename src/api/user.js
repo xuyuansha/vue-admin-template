@@ -75,3 +75,11 @@ export function getRoles(data) {
     params: data
   })
 }
+
+export function delRole(data) {
+  const ids = data.map(item => item).join()
+  return request({
+    url: '/api/system/role/v1/' + ids,
+    method: 'delete'
+  })
+}
