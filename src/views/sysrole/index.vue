@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <delete-dialog :show.sync="dialogDeleteVisible" :title="deleteTitle" :content="deleteContent" @on-result-change="changeIsShowDialog" @child-operation="operation"></delete-dialog>
+    <role-dialog ref="addDialog" :roleInfo="roleInfo"></role-dialog>
     <div class="search-div">
       <el-input placeholder="请输入角色名搜索" max-length="20" size="small" v-model="listQuery.keyword">
         <el-button slot="append" icon="el-icon-search" @click="getRoleList" />
@@ -68,8 +69,9 @@
 import { getRoles, delRole } from '../../api/user'
 import DeleteDialog from '../../components/DeleteDialog/index'
 import Pagination from '../../components/Pagination'
+import RoleDialog from './component/RoleDialog'
 export default {
-  components: { Pagination, DeleteDialog },
+  components: { RoleDialog, Pagination, DeleteDialog },
   data() {
     return {
       list: null,
@@ -84,7 +86,8 @@ export default {
       deleteContent: '',
       batDelDisable: true,
       user: this.$store.getters.user,
-      deleteIds: []
+      deleteIds: [],
+      roleInfo: null
     }
   },
   watch: {
@@ -111,13 +114,19 @@ export default {
         this.total = res.data.total
       })
     },
+    handleEdit(row) {
+      this.roleInfo = row
+      this.$refs.addDialog.show()
+    },
     handleAddRole() {
+      this.roleInfo = null
+      this.$refs.addDialog.show()
     },
     handleSelect(selections) {
       console.log(selections)
       this.deleteIds = []
       selections.forEach((item, selections) => {
-        this.deleteIds.push(item.userId)
+        this.deleteIds.push(item.roleId)
       })
       if (selections && selections.length > 0) {
         this.batDelDisable = false
@@ -151,12 +160,12 @@ export default {
             message: '删除成功！',
             type: 'success'
           })
-          this.getUserList()
+          this.getRoleList()
         })
       } else if (type === 'cancel') {
         this.dialogDeleteVisible = false
       }
-    },
+    }
   }
 }
 </script>

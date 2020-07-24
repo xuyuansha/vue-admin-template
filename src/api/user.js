@@ -83,3 +83,49 @@ export function delRole(data) {
     method: 'delete'
   })
 }
+
+export function getAllMenus() {
+  return request({
+    url: '/api/menus/all',
+    method: 'get'
+  })
+}
+
+export function updateRole(data) {
+  return request({
+    url: '/api/system/role/v1',
+    method: 'post',
+    data
+  })
+}
+
+export function getMenus(data) {
+  return request({
+    url: '/api/system/menu/v1',
+    method: 'get',
+    params: data
+  })
+}
+
+export function delMenu(data) {
+  const ids = data.map(item => item).join()
+  return request({
+    url: '/api/system/menu/v1/' + ids,
+    method: 'delete'
+  })
+}
+
+export function loadOneLevelMenus() {
+  return request({
+    url: '/api/system/menu/one',
+    method: 'get'
+  })
+}
+
+export function updateMenu(data) {
+  return request({
+    url: '/api/system/menu/v1',
+    method: 'post',
+    data
+  })
+}
