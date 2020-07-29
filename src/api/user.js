@@ -129,3 +129,19 @@ export function updateMenu(data) {
     data
   })
 }
+
+export function uploadUserPhoto(data) {
+  return request({
+    url: '/api/system/userPhoto/upload/v1',
+    method: 'post',
+    data
+  })
+}
+
+export function getLogs(data) {
+  return request({
+    url: '/api/system/log/v1',
+    method: 'get',
+    params: data
+  })
+}

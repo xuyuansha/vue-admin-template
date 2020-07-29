@@ -39,6 +39,16 @@
           <el-main style="text-align: center">
             <el-upload
               class="avatar-uploader"
+              :http-request="uploadPhoto"
+              action="#"
+              :show-file-list="false"
+              accept="image/jpeg,image/gif,image/png"
+            >
+              <el-image v-if="form.userPhoto && form.userPhoto!==''" :src="$getImgUrl(form.userPhoto)" class="avatar"></el-image>
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+            <!--<el-upload
+              class="avatar-uploader"
               action=""
               :auto-upload="false"
               :show-file-list="false"
@@ -47,7 +57,7 @@
               >
               <el-image v-if="form.userPhoto && form.userPhoto!==''" :src="form.userPhoto" class="avatar"></el-image>
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
+            </el-upload>-->
             <p>上传头像</p>
             <div>(300K以内，支持jpg,png,gif格式)</div>
           </el-main>
@@ -62,7 +72,7 @@
 </template>
 
 <script>
-import { updateUser, getAllRoles } from '../../../api/user'
+import { updateUser, getAllRoles, uploadUserPhoto } from '../../../api/user'
 import md5 from 'js-md5'
 import { isvalidPass } from '../../../utils/validate'
 import { validUsername } from '@/utils/validate'
@@ -110,39 +120,59 @@ export default {
       const ret = await getAllRoles()
       this.allRoles = ret.data
     },
-    getFile(file, fileList) {
-      // console.log(file.raw.size, file.raw.type)
-      if (file.raw.size / 1024 > 300) {
+    uploadPhoto(item) {
+      console.log(item)
+      const file = item.file
+      if (file.size / 1024 > 300) {
         this.$message.error('不能超过300K')
         return
       }
       // image/jpeg,image/gif,image/png,image/jpg
-      if (file.raw.type !== 'image/jpeg' && file.raw.type !== 'image/jpg' && file.raw.type !== 'image/png' && file.raw.type !== 'image/gif') {
+      if (file.type !== 'image/jpeg' && file.type !== 'image/jpg' && file.type !== 'image/png' && file.type !== 'image/gif') {
         this.$message.error('只支持.jpg, .png, .gif格式')
         return
       }
+      const fd = new FormData()
+      fd.append('file', file)
+      uploadUserPhoto(fd).then(res => {
+        this.$set(this.form, 'userPhoto', res.data)
+      })
+    },
+    /*
+     getFile(file, fileList) {
+        // console.log(file.raw.size, file.raw.type)
+        if (file.raw.size / 1024 > 300) {
+          this.$message.error('不能超过300K')
+          return
+        }
+        // image/jpeg,image/gif,image/png,image/jpg
+        if (file.raw.type !== 'image/jpeg' && file.raw.type !== 'image/jpg' && file.raw.type !== 'image/png' && file.raw.type !== 'image/gif') {
+          this.$message.error('只支持.jpg, .png, .gif格式')
+          return
+        }
 
-      this.getBase64(file.raw).then(res => {
-        // console.log(res)
-        this.$set(this.form, 'userPhoto', res)
-      })
-    },
-    getBase64(file) {
-      return new Promise(function(resolve, reject) {
-        const reader = new FileReader()
-        let imgResult = ''
-        reader.readAsDataURL(file)
-        reader.onload = function() {
-          imgResult = reader.result
-        }
-        reader.onerror = function(error) {
-          reject(error)
-        }
-        reader.onloadend = function() {
-          resolve(imgResult)
-        }
-      })
-    },
+        this.getBase64(file.raw).then(res => {
+          // console.log(res)
+          this.$set(this.form, 'userPhoto', res)
+        })
+      },
+      getBase64(file) {
+        return new Promise(function(resolve, reject) {
+          const reader = new FileReader()
+          let imgResult = ''
+          reader.readAsDataURL(file)
+          reader.onload = function() {
+            imgResult = reader.result
+          }
+          reader.onerror = function(error) {
+            reject(error)
+          }
+          reader.onloadend = function() {
+            resolve(imgResult)
+          }
+        })
+      },
+    */
     handleSubmit() {
       this.$refs.form.validate(bool => {
         if (bool) {

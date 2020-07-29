@@ -5,6 +5,7 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+import { getImgUrl } from '@/utils/tools'
 
 import '@/styles/index.scss' // global css
 
@@ -34,6 +35,10 @@ if (process.env.NODE_ENV === 'production') {
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明
 Vue.use(ElementUI)
+
+Vue.prototype.$getImgUrl = function(path) {
+  return getImgUrl(path)
+}
 
 Vue.config.productionTip = false
 
