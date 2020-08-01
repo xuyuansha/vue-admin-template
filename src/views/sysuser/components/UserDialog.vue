@@ -191,7 +191,7 @@ export default {
   },
   data() {
     const validateUsername = (rule, value, callback) => {
-      if ( !validUsername(value)) {
+      if (!validUsername(value)) {
         callback(new Error('3-20个字符，字母开头，只能包含字母数字下划线'))
       } else {
         callback()

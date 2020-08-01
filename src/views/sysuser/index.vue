@@ -21,7 +21,7 @@
         align="center"
         width="180">
         <template slot-scope="{row}">
-          <el-avatar :src="$getImgUrl(row.userPhoto)" shape="square" />
+          <el-avatar :src="$getImgUrl(row.userPhoto)" shape="square" v-if="row.userPhoto"/>
         </template>
       </el-table-column>
       <el-table-column
