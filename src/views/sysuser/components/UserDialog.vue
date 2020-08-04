@@ -178,7 +178,11 @@ export default {
         if (bool) {
           console.log(this.form)
           const option = deepClone(this.form)
-          option.password = md5(option.password)
+          if (option.password) {
+            option.password = md5(option.password)
+          } else {
+            delete option.password
+          }
           updateUser(option).then(ret => {
             if (ret.code === 0) {
               this.hide()
